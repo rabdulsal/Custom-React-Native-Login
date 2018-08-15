@@ -6,7 +6,7 @@ const { width, height } = Dimensions.get('screen');
 const CustomButton = (props) => {
   state = {};
   return (
-    <TouchableOpacity style={styles.buttonContainer}>
+    <TouchableOpacity style={styles.buttonContainer} {...props}>
       <Text style={styles.buttonText}>{props.text}</Text>
     </TouchableOpacity>
   );

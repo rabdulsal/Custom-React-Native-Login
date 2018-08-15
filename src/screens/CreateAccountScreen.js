@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Input, CustomButton } from '../components/CommonUI';
 import Validator from 'validator';
+import axios from 'axios';
 
 export default class CreateAccountScreen extends Component {
   state = {
@@ -21,11 +22,23 @@ export default class CreateAccountScreen extends Component {
   handleChangePassword = password => this.setState({ password });
 
   handlePressedSignUpButton = () => {
-    const email = this.props.email;
-    if (!Validator.isEmail(email)) {
-      alert('You need a valid email to sign up');
+    const { username, email, password } = this.state;
+    if (Validator.isEmail(email) && username.trim() && password.trim()) {
+      axios.post('<ip_address>/user/register', {
+        email,
+        password,
+        username
+      }).then(response => {
+        if (response.status === 201) {
+          this.props.navigator.pop();
+        }
+      })
+      .catch(() => {
+        alert('There was an error!');
+      });
+    } else {
+      alert('There was an error');
     }
-    this.setState({ email });
   }
 
   render() {
