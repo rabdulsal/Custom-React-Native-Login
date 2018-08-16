@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  Image
+  Image,
+  AsyncStorage
 } from 'react-native';
+import axios from 'axios';
 import {
   Input,
   TextButton,
   CustomButton
 } from '../components/CommonUI';
+import startAccount from './StartAccountScreen';
+import configs from '../../configs';
 
+const { ipAddress } = configs;
 const PHONEBOOK_ICON = require('../../assets/images/phonebook_icon.png');
 
 type Props = {};
@@ -45,6 +50,36 @@ export default class App extends Component<Props> {
     });
   }
 
+  handleLogin = () => {
+    const { username, password } = this.state;
+    if (username && password) {
+      axios.post(`http://${ipAddress}:3000/user/login`, {
+        username,
+        password
+      }).then(response => {
+        try {
+          const { token } = response.headers['x-auth'];
+          if (token) {
+            AsyncStorage.setItem('x-auth', token)
+            .then(() => {
+              startAccount();
+            }).catch(() => {
+              alert('error')
+            });
+          }
+        } catch (err) {
+          alert('error');
+        }
+      }).catch((err) => {
+        alert(err);
+      });
+    } else if (!username) {
+      alert('Please provide a username!');
+    } else {
+      alert('Please provide a password!');
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -73,6 +108,7 @@ export default class App extends Component<Props> {
         >
           <CustomButton
             text="Sign In"
+            onPress={this.handleLogin}
           />
           <TextButton
             onPress={this.handlePushToCreateAccountScreen}

@@ -6,9 +6,12 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import { Input, CustomButton } from '../components/CommonUI';
 import Validator from 'validator';
 import axios from 'axios';
+import { Input, CustomButton } from '../components/CommonUI';
+import configs from '../../configs';
+
+const { ipAddress } = configs;
 
 export default class CreateAccountScreen extends Component {
   state = {
@@ -24,7 +27,7 @@ export default class CreateAccountScreen extends Component {
   handlePressedSignUpButton = () => {
     const { username, email, password } = this.state;
     if (Validator.isEmail(email) && username.trim() && password.trim()) {
-      axios.post('<ip_address>/user/register', {
+      axios.post(`http://${ipAddress}:3000/user/register`, {
         email,
         password,
         username
