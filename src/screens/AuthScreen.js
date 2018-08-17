@@ -58,7 +58,8 @@ export default class App extends Component<Props> {
         password
       }).then(response => {
         try {
-          const { token } = response.headers['x-auth'];
+          console.log(token);
+          const token = response.headers['x-auth'];
           if (token) {
             AsyncStorage.setItem('x-auth', token)
             .then(() => {

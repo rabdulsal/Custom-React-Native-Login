@@ -36,8 +36,8 @@ export default class CreateAccountScreen extends Component {
           this.props.navigator.pop();
         }
       })
-      .catch(() => {
-        alert('There was an error!');
+      .catch((err) => {
+        alert(err);
       });
     } else {
       alert('There was an error');
